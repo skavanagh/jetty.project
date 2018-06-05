@@ -63,7 +63,9 @@ import org.eclipse.jetty.xml.XmlConfiguration;
  * Runner
  * <p>
  * Combine jetty classes into a single executable jar and run webapps based on the args to it.
+ * @deprecated No replacement provided or available.  Migrate to jetty-home (and use {@code ${jetty.base}} directory).
  */
+@Deprecated
 public class Runner
 {
     private static final Logger LOG = Log.getLogger(Runner.class);
@@ -553,6 +555,30 @@ public class Runner
 
     public static void main(String[] args)
     {
+        System.err.println("WARNING:");
+        System.err.println("         jetty-runner is now deprecated with no direct replacement.");
+        System.err.println("         We encourage you to migrate to jetty-home soon.");
+        System.err.println("IMPORTANT NOTE:");
+        System.err.println("         When public Java 8 updates stop, jetty-runner will be fully deprecated");
+        System.err.println("         and removed from the Jetty codebase.");
+        System.err.println("Oracle Java SE Support Roadmap:");
+        System.err.println("         http://www.oracle.com/technetwork/java/javase/eol-135779.html");
+
+        try
+        {
+            String jvmVersionStr = System.getProperty("java.vm.specification.version");
+            int jvmVersion = Integer.parseInt(jvmVersionStr);
+            if(jvmVersion >= 9)
+            {
+                System.err.println();
+                System.err.printf("ERROR: Java 9+ (your JVM is %s) does not support jetty-runner%n", jvmVersionStr);
+                System.err.printf("       Downgrade to Java 8 and try again.%n");
+                System.exit(-1);
+            }
+        } catch(NumberFormatException ignore)
+        {
+        }
+
         Runner runner = new Runner();
 
         try
